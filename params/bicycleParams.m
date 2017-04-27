@@ -55,7 +55,7 @@ mT = mR + mB + mH + mF;
 xT = (xB*mB + xH*mH + w*mF)/mT;
 zT = (-rR*mR + zB*mB + zH*mH -rF*mF)/mT;
 ITxx = IRxx + IBxx + IHxx + IFxx + mR*rR*rR + mB*zB*zB + mH*zH*zH + mF*rF*rF;
-ITxz = IBxz  + IHxz - mB*xB*zB - mH*xH*zH + mF*w*rF; 
+ITxz = IBxz  + IHxz - mB*xB*zB - mH*xH*zH + mF*w*rF;
 ITzz = IRxx + IBzz + IHzz + IFxx + mB*xB*xB + mH*xH*xH + mF*w*w; % IFzz = IFxx
 
 mA = mH + mF;
@@ -84,7 +84,7 @@ M = [ITxx            IAlx + mu*ITxz
 
 K0 = [mT*zT -sA
       -sA   -sA*sin(lam)];
-  
+
 K2 = [0 (sT - mT*zT)*cos(lam)/w
       0 (sA + sF*sin(lam))*cos(lam)/w];
 

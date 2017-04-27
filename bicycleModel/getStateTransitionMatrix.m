@@ -1,16 +1,13 @@
-function [A] = getStateTransitionMatrix( invM, v, B )
+function [A] = getStateTransitionMatrix( v, B )
 %GET_AB_MATRICES returns A and B matrices
 %   input: v speed of the bicycle
 
-global C1;
-global K0;
-global  K2;
-global g;
+global bic g;
 
-C = v*C1;
-K = g*K0 + v*v*K2;
-S1 = -invM*K;
-S2 = -invM*C;
+C = v*bic.C1;
+K = g*bic.K0 + v*v*bic.K2;
+S1 = -bic.invM*K;
+S2 = -bic.invM*C;
 
 A    = [ 0 0 1 0 ;
              0 0 0 1 ;

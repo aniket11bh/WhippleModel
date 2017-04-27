@@ -8,7 +8,7 @@ clc
 % Load Bicycle parameters
 addpath('params');
 addpath('helperFunctions');
-bicycleParams;
+bicycleParam;
 
 % Time parameters
 dt = 0.01;
@@ -25,8 +25,8 @@ bic_inputs = {'steerT'};
 bic_outputs = {'phi','delta'};
 
 B_bic_2 = [0 0
-                    0 0
-                    invM];
+                   0 0
+                   bic.invM];
 
 B_bic = B_bic_2(:,2);
             

@@ -2,16 +2,15 @@ function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-    global w;
-    global invM;
+    global bic;
     persistent X;
     
     if isempty(X)
         X = Yt(2:5)';
     end
     
-    % obtain the new dynamics for diff. vel
-    A = getStateTransitionMatrix(invM, v, B2);
+    % obtain the new dynamics for different vel
+    A = getStateTransitionMatrix(v, B2);
     
     B = B2(:,2);
     sys_bic_cl  = ss( A, B, C, D);
@@ -23,7 +22,7 @@ function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
      % // Calculation of other states // % 
     
     % yaw rate (rad/s) and yaw (rad)
-    psi_dot  = v*tan(X(2))/w; 
+    psi_dot  = v*tan(X(2))/bic.w; 
     psi = Yt(6) + psi_dot*dt;
     
         % convert yaw in to -180 to 180 range
