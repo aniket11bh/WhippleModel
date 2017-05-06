@@ -1,5 +1,5 @@
-% This file simulates the bicycle motion for specific paths
-% bicycle model at constant velocity
+% This file simulates the cycleycle motion for specific paths
+% cycleycle model at constant velocity
 
 close all
 clear all
@@ -13,27 +13,27 @@ bicycleParam;
 % Time parameters
 dt = 0.01;
 Tf = 10;    % simulation time = 10 seconds
-tspan = 0:dt:Tf;         
+tspan = 0:dt:Tf;
 step = Tf/dt;
 
 % Storage
 Y = zeros(length(tspan), 1+10);
 
 % Balancing mecha. Spring const. and damping const.
-bic_states = {'phi' 'delta' 'phi_dot' 'delta_dot'};
-bic_inputs = {'steerT'};
-bic_outputs = {'phi','delta'};
+cycle.states = {'phi' 'delta' 'phi_dot' 'delta_dot'};
+cycle.inputs = {'steerT'};
+cycle.outputs = {'phi','delta'};
 
-B_bic_2 = [0 0
+cycle.B2 = [0 0
                    0 0
                    bic.invM];
 
-B_bic = B_bic_2(:,2);
-            
-C_bic = [1 0 0 0;
+cycle.B = cycle.B2(:,2);
+
+cycle.C = [1 0 0 0;
                  0 1 0 0];
 
-D_bic = [0];
+cycle.D = [0];
 
 iterate = 1;
 
@@ -45,14 +45,14 @@ Yt(2:5) = X0;
 
 % Iterate over velocity %
 for ti = 0:dt:Tf
-    
+
     % Ref. steer angle, u
     u = pi/4;
-    Yt = bicycleInputOutput( v, B_bic_2, C_bic, D_bic, u, Yt, ti, dt );
-    
+    Yt = bicycleInputOutput( v, cycle.B2, cycle.C, cycle.D, u, Yt, ti, dt );
+
     Y(iterate, :) = Yt;
-    simulateTrajectory(Yt);
-    
+    bicycleAnimation(Yt);
+
     iterate = iterate + 1;
 end
 
