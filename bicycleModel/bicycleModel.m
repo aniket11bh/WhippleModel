@@ -82,16 +82,17 @@ sys_bic_cl  = ss(A, B/N_bar, C, D, ...
 
 x0 = [0 0 0 0]; 
 
-transientResponse(sys_bic_cl, 4, 100);
+% For own effect and coupling effects
+% transientResponse(sys_bic_cl, 4, 100);
 
-%{ 
+% %{ 
 
 t = 0:0.01:4;
 % impulse(sys_bic_cl);
 
 % Reference var.
 r = [0*ones(size(t))
-        pi/3*ones(size(t))];
+       pi/3*ones(size(t))];
 
 [y, t, x] = lsim(sys_bic_cl, r, t, x0);
 yyaxis left
