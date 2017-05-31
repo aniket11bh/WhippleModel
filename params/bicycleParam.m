@@ -49,6 +49,12 @@ H.I = [H.Ixx 0    H.Ixz
 
 [bic.M, bic.K0, bic.K2, bic.C1] = getSystemMatrices(R, B, H, F, bic);
 bic.invM = inv(bic.M);
+bic.B = [0 0
+              0 0
+              bic.invM];
+bic.C = [1 0 0 0
+               0 1 0 0];
+bic.D = zeros(2,2);
 
 % v = 5;
 % C = v*C1;
