@@ -24,16 +24,17 @@ S2 = -invM*C;
 
 
 A_bic = [ 0 0 1 0 ;
-                  0 0 0 1 ;
-                  S1  S2 ];
+                 0 0 0 1 ;
+                 S1  S2 ];
 
-B_bic = [0
-                0
-                invM(2,1)
-                invM(2,2)];
- 
+B_bic_2 = [0 0
+                   0 0
+                   invM];
+
+B_bic = B_bic_2(:,2);
+
 C_bic = [1 0 0 0;
-                0 1 0 0];
+               0 1 0 0];
 
 D_bic = [0];
 
@@ -55,7 +56,17 @@ K_roll = [7843.20023833066 0 424.726009043642 0;
 %                     0 0 0 0];
 K_steer= [0  56.8966724666967 0 7.16138850467022;
                     0 0 0 0];
-                
+
+K_lean = zeros(1,4);
+K_lean(1) = 7843.20023833066;
+K_lean(3) = 424.726009043642;
+
+K_steer = zeros(1,4);
+K_steer(2) = 9.46120848195432;
+K_steer(4) = 1.387655359381;
+
+A_bic = A_bic - B_bic_2(:,1)*K_lean;
+
 a = [0 0; 0 0; b31 0; 0 0]*K_roll;
 b = [0 0; 0 0; 0 0; b42 0]*K_steer;
 A_bic = A_bic -a;
@@ -74,6 +85,6 @@ sys_bic_cl  = ss(( A_bic), B_bic, C_bic, D_bic, ...
               
 N_bar = dcgain(sys_bic_cl);         
 t = 0:0.01:4;
-step(sys_bic_cl);
-% figure, step(sys_bic_cl(1)/N_bar(1))
-% figure, step(sys_bic_cl(2)/N_bar(2) );
+% step(sys_bic_cl);
+figure, step(sys_bic_cl(1)/N_bar(1))
+figure, step(sys_bic_cl(2)/N_bar(2) );
