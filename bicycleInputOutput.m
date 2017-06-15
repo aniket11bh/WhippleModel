@@ -1,6 +1,11 @@
-function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+function [ Yt ] = bicycleInputOutput( v, u, Yt, ti, dt )
+%BICYCLE_INPUT_OUTPUT returns [ti, X, psi, x, y, psi_dot, x_dot, y_dot]
+%   Inputs : 
+%       v = velocity of the bicycle
+%       u = reference input  : [phi_ref; delta_ref]
+%       Yt = 
+%       ti = timestamp
+%       dt = timestep
 
     global bic;
     persistent X;
@@ -10,12 +15,18 @@ function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
     end
     
     % obtain the new dynamics for different vel
-    A = getStateTransitionMatrix(v, B2);
+    A = getStateTransitionMatrix(v, bic.B, 3);
     
-    B = B2(:,2);
-    sys_bic_cl  = ss( A, B, C, D);
+    sys_bic_cl  = ss( A, bic.B, bic.C, bic.D);
     N_bar = dcgain(sys_bic_cl);         
 
+    sys_bic_norm  = ss(A, bic.B/N_bar, bic.C, bic.D);
+    
+    A = sys_bic_norm.A;
+    B = sys_bic_norm.B;
+    C = sys_bic_norm.C;
+    D = sys_bic_norm.D;
+   
     % calculate the new states
     X = RK4( @bicycleStateDot, X, A, B, u, dt, ti );
        
@@ -25,8 +36,8 @@ function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
     psi_dot  = v*tan(X(2))/bic.w; 
     psi = Yt(6) + psi_dot*dt;
     
-        % convert yaw in to -180 to 180 range
-        psi = atan2(sin(psi), cos(psi));
+    % convert yaw in to -180 to 180 range
+    psi = atan2(sin(psi), cos(psi));
 
      % Position calculation [m]
     x_dot = v*cos(psi);
@@ -34,5 +45,5 @@ function [ Yt ] = bicycleInputOutput( v, B2, C, D, u, Yt, ti, dt )
     x = Yt(7) + x_dot*dt;
     y = Yt(8) + y_dot*dt;
     
-    Yt = [ti X(1)/N_bar(1) ,  X(2)/N_bar(2) ,  X(3)/N_bar(1),   X(4)/N_bar(1),  psi, x, y, psi_dot, x_dot, y_dot]; 
+    Yt = [ti X(1) ,  X(2) ,  X(3),   X(4),  psi, x, y, psi_dot, x_dot, y_dot, u(2)]; 
 end

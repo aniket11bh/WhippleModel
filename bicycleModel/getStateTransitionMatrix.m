@@ -27,8 +27,8 @@ elseif type  == 1
 elseif type == 2
         
     K_steer = zeros(1,4);
-    K_steer(2) = 9.46120848195432;
-    K_steer(4) = 1.387655359381;
+    K_steer(2) =33.0078;
+    K_steer(4) = 5.4516;
     
     A = A - B(:,2)*K_steer;
 
@@ -38,8 +38,8 @@ elseif type == 3
     K_lean(3) = 424.726009043642;
 
     K_steer = zeros(1,4);
-    K_steer(2) = 9.46120848195432;
-    K_steer(4) = 1.387655359381;
+    K_steer(2) =33.0078;
+    K_steer(4) = 5.4516;
 
     A = A - B(:,1)*K_lean - B(:,2)*K_steer;
 else

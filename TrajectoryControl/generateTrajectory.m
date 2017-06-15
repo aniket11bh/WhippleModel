@@ -1,15 +1,26 @@
-function [X] = generateTrajectory()
+function [X] = generateTrajectory(TrajectoryFlag)
+% GENERATE_TRAJECTORY generates trajectory points according 
+% to it's search based or pre-plannned trajectory control
+
+global bic;
+
 %% Circle passing through origin
 %{
-R = 5;
-xc = 3;
-yc = 4;
-theta = 0:0.2:2*pi;
-theta = [theta 0];
+R = bic.w;
+xi = 1.5;
+yi = 1;
+
+xc = 1.5;
+yc = yi+R;
+theta = -pi/2:0.2:3*pi/2;
+theta = [theta];
 x = xc + R*cos(theta);
 y = yc + R*sin(theta);
-z = zeros(size(x));
+
 plot(x,y,'-x'), axis equal; grid;
+
+X = [x; y];
+
 %}
 
 %% Eight
@@ -18,49 +29,66 @@ x = 0:.1:2*pi;
 y = -sin(x);
 y1 = sin(x);
 X = [x fliplr(x);
-     y fliplr(y1)];
+        y fliplr(y1)];
 plot(X(1,:),X(2,:));
 %}
 
 %% Ellipse %
 %{
-a = 5;
+a = 2;
 e = 0.8;
 b = a*sqrt(1-e*e);
 
 xc = a*cos(pi/4);
-yc = b*sin(pi/4);
-theta = 0:0.2:2*pi;
-theta = [theta 0];
+yc = 2+b*sin(pi/4);
+theta = -pi/2:0.2:3*pi/2;
+
 x = xc + a*cos(theta);
 y = yc + b*sin(theta);
 z = zeros(size(x));
+
+X = [x;
+        y];
 plot(x,y,'-x'), axis equal; grid;
 %}
 
 %% Rectangle
 %{
-x = 0;
-y = [0 .15 1.12 2.36 2.36 1.46 .49 .06 0];
-cs = spline(x,[0 y 0]);
-xx = linspace(-4,4,101);
-plot(x,y,'o',xx,ppval(cs,xx),'-');
+points = [1.5 1; 3.5 1; 3.5 3; 1.5 3; 1.5 5; 3.5 5];
+X = points';
 %}
+
+%% LaneChange
+%{
+x = -3:3; 
+y = [-1 -1 -1 0 1 1 1]; 
+xq1 = -3:.01:3;
+p = pchip(x,y,xq1);
+s = spline(x,y,xq1);
+% plot(x,y,'o',xq1,p,'-',xq1,s,'-.')
+plot(x,y,'o',xq1,p,'-')
+
+X = [xq1;
+        p];
+%}
+
 
 %% curve point to point
 %{
-x = [0 1];
-y = [0 1];
+x = [2 5];
+y = [1 4];
 xq = x(1):0.1:x(end);
 yq = spline(x,[0 y 0],xq);
 plot(xq,yq,':.b',x,y,'or');
-axis([-0.5 1.5 -0.5 1.5]);
+
+X = [xq;
+        yq];
 %}
 
 %% zig zag
+% %{ 
 t = [0 1 2 3 4 5];
-% points = [1.5 1; 3.5 1; 3.5 3; 1.5 3; 1.5 5; 3.5 5];
-points = [1.5 1; 3 1; 4.5 1; 6 1; 7.5 1; 9 1];
+points = [1.5 1; 3.5 1; 3.5 3; 1.5 3; 1.5 5; 3.5 5];
 x = points(:,1);
 y = points(:,2);
 
@@ -70,9 +98,20 @@ slopeF = 0;
 xq = spline(t,[slope0; x; slopeF],tq);
 yq = spline(t,[slope0; y; slopeF],tq);
 
-% X = [xq
-%         yq];
+X = [xq
+        yq];
+% X = points';
+%}
+
+%% Straight line
+%{
+points = [1.5 1; 3.5 1; 4.5 1; 5.5 1; 6.5 1; 7.5 1];
+
 X = points';
+%}
+    
+%%
+
 
 %{
 % plot spline in t-x, t-y and x-y space

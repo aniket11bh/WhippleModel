@@ -1,5 +1,5 @@
 clear all
-close all
+% close all
 clc
 
 % Bicycle model
@@ -9,16 +9,17 @@ addpath('params');
 addpath('helperFunctions');
 
 bicycleParam;
+dcMotorParam;
 
 % Bicycle velocity
-v = 1.5;
+v = 1;
 
 % Balancing mecha. Spring const. and damping const.
 bic_states = {'phi' 'delta' 'phi_dot' 'delta_dot'};
 bic_inputs = {'leanT' 'steerT'};
 bic_outputs = {'phi','steer'};
 
-A = getStateTransitionMatrix(v, bic.B, 0);
+A = getStateTransitionMatrix(v, bic.B, 3);
 B = bic.B; 
 C = bic.C;
 D = bic.D;
@@ -37,7 +38,7 @@ D = bic.D;
 %           p_lean = [-3.384+10.2i , -3.384-10.2i];
 
 % Use k from lean and steer controller
-% %{
+%{
 K_lean = zeros(1,4);
 K_lean(1) = 7843.20023833066;
 K_lean(3) = 424.726009043642;
@@ -45,9 +46,9 @@ K_lean(3) = 424.726009043642;
 K_steer = zeros(1,4);
 K_steer(2) = 33.0078;
 K_steer(4) = 5.4516;
-eig(A)
-A = A - B(:,1)*K_lean - B(:,2)*K_steer;
-eig(A)
+% eig(A)
+% A = A - B(:,1)*K_lean - B(:,2)*K_steer;
+% eig(A)
 %}
 
 %{
@@ -74,7 +75,7 @@ sys_bic = ss(A, B, C, D, ...
 
 N_bar = dcgain(sys_bic);   
 
-sys_bic_cl  = ss(A, B/N_bar, C, D, ...
+sys_bic_norm  = ss(A, B/N_bar, C, D, ...
                           'statename', bic_states,...
                           'inputname', bic_inputs,...
                           'outputname', bic_outputs);
@@ -92,9 +93,9 @@ t = 0:0.01:4;
 
 % Reference var.
 r = [0*ones(size(t))
-       pi/3*ones(size(t))];
+       pi/4*ones(size(t))];
 
-[y, t, x] = lsim(sys_bic_cl, r, t, x0);
+[y, t, x] = lsim(sys_bic_norm, r, t, x0);
 yyaxis left
 plot(t, y(:,1)*180/pi);
 hold on
@@ -104,7 +105,7 @@ ylabel('Lean angle (degrees)')
 yyaxis right
 plot(t, y(:,2)*180/pi);
 plot(t, r(2,:)*180/pi, ':');
-ylabel('Lean angle (degrees)');
+ylabel('Steer angle (degrees)');
 
 hold off;
 title('Step Response of steer and lean angles')

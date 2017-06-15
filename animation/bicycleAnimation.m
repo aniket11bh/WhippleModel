@@ -1,22 +1,18 @@
-function [ output_args ] = bicycleAnimation( Yt )
+function [ output_args ] = bicycleAnimation( X, Yt, G, La )
 %BICYCLE_ANIMATION Summary of this function goes here
-%   Detailed explanation goes here
-input u, L, gap, width, height
-
-    
-    % Test
-    t = 0;
-    x = 0;
-    y = 0;
-    delta = pi/4;
-    psi = pi/4;
+%%   Detailed explanation goes here
+% input u, L, gap, width, height
 
     % Process inputs to function  
-%     t = Yt(1);
-%     x = Yt(7);
-%     y = Yt(8);
-%     delta = Yt(2);
-%     psi = Yt(6);
+    t = Yt(1);
+    x = Yt(7);
+    y = Yt(8);
+    delta = Yt(3);
+    psi = Yt(6);
+    
+    % Trajectory points
+    xq = X(1,:);
+    yq = X(2,:);
     
     % Different handles
     persistent rw_handle

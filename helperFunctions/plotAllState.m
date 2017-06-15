@@ -1,4 +1,4 @@
-function [ ] = plotAllState(Y)
+function [ ] = plotAllState(X, Y)
 %PLOTALLSTATE plots
 % phi, delta, psi, and trajectory of the bicycle
 
@@ -6,10 +6,13 @@ function [ ] = plotAllState(Y)
     
     figure
     plot(t, (180/pi)*Y(:,2:3) );
+    hold on;
+    plot(t, (180/pi)*Y(:,12));
+    hold off;
     title('Bicycle lean and steer');
     xlabel('Time t (sec)');
     ylabel('angle (degrees)');
-    legend('\phi','\delta');
+    legend('\phi','\delta', '\delta_{ref}');
        
     figure
     plot(t, (180/pi)*Y(:,6));
@@ -20,17 +23,20 @@ function [ ] = plotAllState(Y)
 
     figure
     plot(Y(:,7), Y(:,8));
-    title('Trajectory of the bicycle');
+    hold on
+    plot(X(1,:), X(2,:));
+    hold off
+    title('Trajectory');
     xlabel('x (m)');
     ylabel('y (m)');
-    % legend('y_1','y_2')
+    legend('Trajectory followed by bicycle','Desired trajectory')
     
     figure
     plot(t, Y(:,10:11));
     title('Velocity of the bicycle');
     xlabel(' time in sec');
     ylabel('vel (m/s)');
-    legend('x_dot', 'y_dot');
+    legend('x_{dot}', 'y_{dot}');
 
 end
 

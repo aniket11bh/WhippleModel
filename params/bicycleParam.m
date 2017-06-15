@@ -1,10 +1,13 @@
-global bic g
+global bic g TrajectoryFlag
 
 % geometry params
 bic.w = 1.02; % bic.wheelbase
 bic.c = 0.08; % caster
 bic.lam = 0.314159265358979323846; % laB.mda in rad
 g = 9.81;
+
+TrajectoryFlag = 'search';
+% TrajectoryFlag = 'preplan';
 
 % Rear bic.wheel
 R.r = 0.3;
